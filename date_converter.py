@@ -1,349 +1,286 @@
-#
-#
-#	Author : Ajesh Sen Thapa
-#	Website: www.ajesh.com.np
-#
-#
+"""
+This python file contains nepali date converter module.
 
-import time
-
-class DateConverter:
-	
-	def __init__(self):
-
-		self.englishMonths = [31, 28, 31, 30, 31, 30,31, 31, 30, 31, 30, 31]
-		self.englishLeapMonths = [31, 29, 31, 30, 31, 30,31, 31, 30, 31, 30, 31]
-		
-		self.nepaliMonths = [
-			[ 30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31 ],  #2000
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],  #2001
-			[ 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31 ],
-			[ 30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31 ],
-			[ 31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 29, 31 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31 ],
-			[ 31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31 ],
-			[ 31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31 ],
-			[ 31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31 ],
-			[ 31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31 ],
-			[ 30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 31, 32, 30, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31 ],
-			[ 30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31 ],
-			[ 30, 32, 31, 32, 31, 31, 29, 30, 30, 29, 29, 31 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31 ],
-			[ 31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31 ],
-			[ 31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31 ],
-			[ 31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31 ],
-			[ 31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 31, 32, 30, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31 ],
-			[ 30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31 ],
-			[ 30, 32, 31, 32, 31, 31, 29, 30, 29, 30, 29, 31 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31 ],
-			[ 31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 29, 31 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31 ],
-			[ 31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],  #2071
-			[ 31, 32, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30 ],  #2072
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31 ],  #2073
-			[ 31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31 ],
-			[ 31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30 ],
-			[ 31, 31, 32, 32, 31, 30, 30, 30, 29, 30, 30, 30 ],
-			[ 30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 30, 30 ],
-			[ 31, 31, 32, 31, 31, 30, 30, 30, 29, 30, 30, 30 ],
-			[ 31, 31, 32, 31, 31, 30, 30, 30, 29, 30, 30, 30 ],
-			[ 31, 32, 31, 32, 30, 31, 30, 30, 29, 30, 30, 30 ],
-			[ 30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 30, 30 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 30, 29, 30, 30, 30 ],
-			[ 30, 31, 32, 32, 30, 31, 30, 30, 29, 30, 30, 30 ],
-			[ 30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 30, 30 ],
-			[ 30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 30, 30 ],  #2090
-			[ 31, 31, 32, 31, 31, 31, 30, 30, 29, 30, 30, 30 ],
-			[ 30, 31, 32, 32, 31, 30, 30, 30, 29, 30, 30, 30 ],
-			[ 30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 30, 30 ],
-			[ 31, 31, 32, 31, 31, 30, 30, 30, 29, 30, 30, 30 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 30, 30, 30, 30 ],
-			[ 30, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30 ],
-			[ 31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 30, 30 ],
-			[ 31, 31, 32, 31, 31, 31, 29, 30, 29, 30, 29, 31 ],
-			[ 31, 31, 32, 31, 31, 31, 30, 29, 29, 30, 30, 30 ]   #2099
-		]
-
-	def setCurrentDate(self):
-	  year = int(time.strftime("%Y"))
-	  month = int(time.strftime("%m"))
-	  date = int(time.strftime("%d"))
-	  self.setEnglishDate(year, month, date)
-
-	
-	#English to Nepali date conversion
-
-	def setEnglishDate(self,year, month, date):
-		if(not self.__isEnglishRange(year,month,date)):
-			raise Exception("Invalid date format.")
-
-		self.englishYear = year
-		self.englishMonth = month
-		self.englishDate = date
-
-		#Setting nepali reference to 2000/1/1 with english date 1943/4/14
-		self.nepaliYear = 2000
-		self.nepaliMonth = 1
-		self.nepaliDate = 1
-
-		difference = self.getEnglishDateDifference(1943, 4, 14)
-
-		#Getting nepali year untill the difference remains less than 365
-		index = 0
-		while( difference >= self.__nepaliYearDays(index) ):
-			self.nepaliYear+=1
-			difference = difference - self.__nepaliYearDays(index)
-			index+=1
-
-		#Getting nepali month untill the difference remains less than 31
-		i = 0
-		while(difference >= self.nepaliMonths[index][i]):
-			difference = difference - self.nepaliMonths[index][i]
-			self.nepaliMonth+=1
-			i+=1
-
-		#Remaning days is the date
-		self.nepaliDate = self.nepaliDate + difference
-		
-		self.getDay()
-		
-
-	def toEnglishString(self, format='-'):
-		return str(self.englishYear)+format+str(self.englishMonth)+format+str(self.englishDate)
-		
-
-	def getEnglishDateDifference(self, year, month, date):
-		
-		#Getting difference from the current date with the date provided
-		difference = self.__countTotalEnglishDays(self.englishYear, self.englishMonth, self.englishDate) - self.__countTotalEnglishDays(year, month, date)
-		if difference < 0: 
-		  return -difference
-		else:
-		  return difference
-	
+USAGE:
+from date_converter import converter
+y, m, d = converter.english_to_nepali(2023, 1, 15)
+y, m, d = converter.nepali_to_english(2079, 10, 1)
+"""
 
 
-	def __countTotalEnglishDays(self, year, month, date):
+class NepaliDateConverter:
+    """
+    Nepali Date Converter
 
-		totalDays = year * 365 + date
-				
-		for i in range(0,month-1):
-			totalDays = totalDays + self.englishMonths[i]
-		
-		totalDays = totalDays + self.__countleap(year, month)
-		return totalDays
+    All the functions here contains the method to convert english date to nepali and nepali date to english.
+    """
+    # Reference date for conversion is 2000/01/01 BS and 1943/4/14 AD
+
+    EN_MONTHS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    EN_LEAP_YEAR_MONTHS = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]  # Leap year months (Just 29 on Feb)
+
+    # Nepali months data
+    # [
+    #   ((LIST_OF_MONTHS), TOTAL_DAYS_IN_YEAR),
+    #   ...
+    # ]
+    #
+    NP_MONTHS_DATA = [
+        ((30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31), 365),  # 2000 BS - 1944 AD
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),  # 2001 BS
+        ((31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31), 366),
+        ((30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31), 366),
+        ((31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 29, 31), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31), 366),
+        ((31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31), 366),
+        ((31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31), 366),
+        ((31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31), 366),
+        ((31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31), 366),
+        ((30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 31, 32, 30, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31), 366),
+        ((30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31), 366),
+        ((30, 32, 31, 32, 31, 31, 29, 30, 30, 29, 29, 31), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31), 366),
+        ((31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31), 366),
+        ((31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31), 366),
+        ((31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31), 366),
+        ((31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31), 366),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 31, 32, 30, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31), 366),
+        ((30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31), 366),
+        ((30, 32, 31, 32, 31, 31, 29, 30, 29, 30, 29, 31), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31), 366),
+        ((31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 29, 31), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31), 366),
+        ((31, 31, 31, 32, 31, 31, 29, 30, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 31), 366),
+        ((31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31), 366),
+        ((31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30), 365),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30), 365),
+        ((31, 31, 32, 32, 31, 30, 30, 30, 29, 30, 30, 30), 366),
+        ((30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 30, 30), 365),
+        ((31, 31, 32, 31, 31, 30, 30, 30, 29, 30, 30, 30), 365),
+        ((31, 31, 32, 31, 31, 30, 30, 30, 29, 30, 30, 30), 365),
+        ((31, 32, 31, 32, 30, 31, 30, 30, 29, 30, 30, 30), 366),
+        ((30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 30, 30), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 30, 29, 30, 30, 30), 366),
+        ((30, 31, 32, 32, 30, 31, 30, 30, 29, 30, 30, 30), 365),
+        ((30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 30, 30), 365),
+        ((30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 30, 30), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 30, 29, 30, 30, 30), 366),
+        ((30, 31, 32, 32, 31, 30, 30, 30, 29, 30, 30, 30), 365),
+        ((30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 30, 30), 365),
+        ((31, 31, 32, 31, 31, 30, 30, 30, 29, 30, 30, 30), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 30, 30, 30, 30), 366),
+        ((30, 31, 32, 32, 31, 30, 30, 29, 30, 29, 30, 30), 364),
+        ((31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 30, 30), 366),
+        ((31, 31, 32, 31, 31, 31, 29, 30, 29, 30, 29, 31), 365),
+        ((31, 31, 32, 31, 31, 31, 30, 29, 29, 30, 30, 30), 365),  # 2099 BS - 2042 AD
+    ]
+
+    # ENGLISH DATE CONVERSION
+
+    def check_english_date(self, year, month, day):
+        """checks if english date in within range 1944 - 2042"""
+        if (year < 1944 or year > 2042):
+            return False
+        if (month < 1 or month > 12):
+            return False
+        if (day < 1 or day > 31):
+            return False
+        return True
+
+    def _get_total_days_from_english_date(self, year, month, day):
+        """counts and returns total days from the date 0000-01-01"""
+        total_days = year * 365 + day
+        for i in range(0, month-1):
+            total_days = total_days + self.EN_MONTHS[i]
+
+        # adding leap days (ie. leap year count)
+        if (month <= 2):  # checking February month (where leap exists)
+            year -= 1
+        total_days += year//4 - year//100 + year//400
+
+        return total_days
+
+    # NEPALI DATE CONVERSION
+
+    def check_nepali_date(self, year, month, day):
+        """checks if nepali date is in range 2000-2098"""
+        if (year < 2000 or year > 2098):
+            return False
+        if (month < 1 or month > 12):
+            return False
+        if (day < 1 or day > self.NP_MONTHS_DATA[year-2000][0][month-1]):
+            return False
+        return True
+
+    def _get_total_days_from_nepali_date(self, year, month, day):
+        """counts and returns total days from the nepali date 2000-01-01"""
+        total_days = day - 1  # taking ref with Date's day 1, so -1
+
+        # adding days of months of 2000
+        year_index = year - 2000
+        for i in range(0, month-1):
+            total_days = total_days + self.NP_MONTHS_DATA[year_index][0][i]
+
+        # adding days of year
+        for i in range(0, year_index):
+            total_days = total_days + self.NP_MONTHS_DATA[i][1]
+
+        return total_days
+
+    def _is_leap_year(self, year):
+        """checks if the english year is leap year or not"""
+        if (year % 4 == 0):
+            if (year % 100 == 0):
+                return (year % 400 == 0)
+            return True
+        return False
+
+    # Public methods
+
+    def english_to_nepali(self, year, month, day):
+        """
+        Converts english date to nepali
+        return year, month, day
+        """
+        # VALIDATION
+        # checking if date is in range
+        if not self.check_english_date(year, month, day):
+            raise ValueError("Date out of range")
+
+        # REFERENCE
+        # Setting nepali reference to 2000/01/01 with english date 1943/04/14
+        np_year = 2000
+        np_month = 1
+        np_day = 1
+
+        # DIFFERENCE
+        # calculating difference days from 1943/04/14
+        difference = abs(
+            self._get_total_days_from_english_date(year, month, day)
+            - self._get_total_days_from_english_date(1943, 4, 14)
+        )
+
+        # YEAR
+        # Incrementing year until the difference remains less than 365
+        year_data_index = 0
+        while difference >= self.NP_MONTHS_DATA[year_data_index][1]:
+            difference -= self.NP_MONTHS_DATA[year_data_index][1]
+            np_year += 1
+            year_data_index += 1
+
+        # MONTH
+        # Incrementing month until the difference remains less than next nepali month days (mostly 31)
+        i = 0
+        while difference >= self.NP_MONTHS_DATA[year_data_index][0][i]:
+            difference -= self.NP_MONTHS_DATA[year_data_index][0][i]
+            np_month += 1
+            i += 1
+
+        # DAY
+        # Remaining difference is the day
+        np_day += difference
+
+        return np_year, np_month, np_day
+
+    def nepali_to_english(self, year, month, day):
+        """
+        Converts english date to nepali
+        return year, month, day
+        """
+        # VALIDATION
+        # checking if date is in range
+        if not self.check_nepali_date(year, month, day):
+            raise ValueError("Date out of range")
+
+        # REFERENCE
+        # Setting english reference to 1944/01/01 with nepali date 2000/09/17
+        en_year = 1944
+        en_month = 1
+        en_day = 1
+
+        # DIFFERENCE
+        # calculating difference days from 2000/09/17
+        difference = abs(
+            self._get_total_days_from_nepali_date(year, month, day)
+            - self._get_total_days_from_nepali_date(2000, 9, 17)
+        )
+
+        # YEAR
+        # Incrementing year until the difference remains less than 365 (or 365)
+        while (
+            (difference >= 366 and self._is_leap_year(en_year))
+            or (difference >= 365 and not (self._is_leap_year(en_year)))
+        ):
+            difference -= 366 if self._is_leap_year(en_year) else 365
+            en_year += 1
+
+        # MONTH
+        # Incrementing month until the difference remains less than next english month (mostly 31)
+        month_days = self.EN_LEAP_YEAR_MONTHS if self._is_leap_year(en_year) else self.EN_MONTHS
+        i = 0
+        while (difference >= month_days[i]):
+            difference -= month_days[i]
+            en_month += 1
+            i += 1
+
+        # DAY
+        # Remaining difference is the day
+        en_day += difference
+
+        return en_year, en_month, en_day
 
 
-	def __countleap(self, year, month):
-		if (month <= 2):
-			year-=1
-		
-		return (year//4-year//100+year//400)
-		
-
-	def __isEnglishRange(self, year, month, date):
-		
-		if(year < 1944 or year > 2042):
-			return False
-		
-		if(month < 1 or month > 12):
-			return False
-		
-		if(date < 1 or date > 31):
-			return False
-		
-		return True
-	
-
-	def __isLeapYear(self, year):
-
-		if(year%4 == 0):
-		  if(year%100 == 0):
-		    return (year%400 == 0)
-		  else:
-		    return True                
-		else:
-		  return False
-
-
-
-	#Nepali to English date conversion
-
-	def setNepaliDate(self, year, month, date):
-
-		if(not self.__isNepaliRange(year,month,date)):
-			raise Exception("Invalid date format.")
-
-		self.nepaliYear = year
-		self.nepaliMonth = month
-		self.nepaliDate = date
-		
-		#Setting english reference to 1944/1/1 with nepali date 2000/9/17
-		self.englishYear = 1944
-		self.englishMonth = 1
-		self.englishDate = 1
-		
-		difference = self.getNepaliDateDifference(2000, 9, 17)
-		
-		#Getting english year untill the difference remains less than 365
-		while( (difference >= 366 and self.__isLeapYear(self.englishYear)) or  (difference >= 365 and not(self.__isLeapYear(self.englishYear)) ) ):
-		  if( self.__isLeapYear(self.englishYear) ):
-		    difference -= 366
-		  else:
-		    difference -= 365
-		  self.englishYear += 1
-		
-		#Getting english month untill the difference remains less than 31
-		if(self.__isLeapYear(self.englishYear)):
-		  monthDays = self.englishLeapMonths
-		else: 
-		  monthDays = self.englishMonths
-		i = 0
-		while( difference >= monthDays[i]):
-			self.englishMonth+=1
-			difference = difference - monthDays[i]
-			i+=1
-		
-		#Remaning days is the date
-		self.englishDate = self.englishDate + difference
-		
-		self.getDay()
-
-
-	def toNepaliString(self, format="-"):
-		return str(self.nepaliYear)+format+str(self.nepaliMonth)+format+str(self.nepaliDate)
-
-	
-	def getNepaliDateDifference(self, year, month, date):
-
-		#Getting difference from the current date with the date provided
-		difference = self.__countTotalNepaliDays(self.nepaliYear, self.nepaliMonth, self.nepaliDate) - self.__countTotalNepaliDays(year, month, date)
-		if(difference < 0):
-		  return -difference
-		else:
-		  return difference
-
-
-	def __countTotalNepaliDays(self, year, month, date):
-
-		total = 0
-		if(year < 2000):
-			return 0
-		
-		total = total + (date-1)
-		
-		yearIndex = year - 2000
-		for i in range(0,month-1):
-			total = total + self.nepaliMonths[yearIndex][i]
-		
-		for i in range(0,yearIndex):
-			total = total + self.__nepaliYearDays(i)
-		
-		return total
-
-
-	def __nepaliYearDays(self, index):
-		total = 0
-		
-		for i in range(0,12):
-			total += self.nepaliMonths[index][i]
-		
-		return total
-		
-
-	def __isNepaliRange(self, year, month, date):
-		if(year < 2000 or year > 2098):
-			return False
-		
-		if(month < 1 or month > 12):
-			return False
-		
-		if(date < 1 or date > self.nepaliMonths[year-2000][month-1]):
-			return False
-		
-		return True
-
-
-	#Class Regular methods
-
-	def getDay(self):
-
-		#Reference date 1943/4/14 Wednesday 
-		difference = self.getEnglishDateDifference(1943, 4, 14)
-		self.weekDay = ((3 + (difference%7) ) % 7 ) + 1
-		return self.weekDay
-	
-
-	def getEnglishYear(self):
-	  return self.englishYear
-	
-	def getEnglishMonth(self):
-	  return self.englishMonth
-	
-	def getEnglishDate(self):
-	  return self.englishDate
-	
-	def getNepaliYear(self): 
-	  return self.nepaliYear
-	
-	def getNepaliMonth(self):
-	  return self.nepaliMonth
-	
-	def getNepaliDate(self):
-	  return self.nepaliDate
-
-	def __str__(self):
-		return "English Date: "+self.toEnglishString()+"\nNepali Date: "+self.toNepaliString()+"\nDay: "+str(self.weekDay)
+converter = NepaliDateConverter()

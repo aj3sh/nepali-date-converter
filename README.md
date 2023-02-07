@@ -1,10 +1,31 @@
 # Nepali Date Converter
 
-A source code for nepali date converter in most of popular programming languages including Java, PHP, C#, JS, Dart, Python, and more on.
+A source code for nepali date converter in most of popular programming languages including Python, GO, Java, PHP, C#, JS, Dart, and more on.
 
 ## Note
 
 The method names are similar for all programming languages. As this source code was created on Nov 17, 2017, it is not refactored well but works fine. The refactoring we will be done asap. We will also add the source code for new programming languages and update the docs for the codes.
+
+## Python
+
+```python
+from date_converter import converter
+
+y, m, d = converter.english_to_nepali(2023, 1, 15)
+print(y, m, d) # 2079 10 1
+
+y, m, d = converter.nepali_to_english(2079, 10, 1)
+print(y, m, d) # 2023 1 15
+```
+
+## Golang (GO)
+```golang
+npDates, _ := dateConverter.EnglishToNepali(2023, 1, 15)
+fmt.Println(npDates[0], npDates[1], npDates[2]) // 2079 10 1
+
+enDates, _ := dateConverter.NepaliToEnglish(2079, 10, 1)
+fmt.Println(enDates[0], enDates[1], enDates[2]) // 2023 1 15
+```
 
 ## Java
 
@@ -43,23 +64,6 @@ $converter->setCurrentDate();
 echo $converter->getNepaliYear()."/".$converter->getNepaliMonth()."/".$converter->getNepaliDate();
 echo "Weekly day: ".$converter->getDay();
 echo $converter->toNepaliString();
-```
-
-## Python
-
-```python
-from DateConverter import DateConverter
-
-converter = DateConverter()
-converter.setNepaliDate(2074, 7, 26)
-print(str(converter.getEnglishYear())+"/"+str(converter.getEnglishMonth())+"/"+str(converter.getEnglishDate()))
-print(converter)
-print()
-
-converter.setCurrentDate()
-print(str(converter.getNepaliYear())+"/"+str(converter.getNepaliMonth())+"/"+str(converter.getNepaliDate()))
-print( "Weekly day: "+ str(converter.getDay()) )
-print( converter.toNepaliString() )
 ```
 
 ## JavaScript
